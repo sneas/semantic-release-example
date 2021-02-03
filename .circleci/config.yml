@@ -3,6 +3,11 @@ defaults: &defaults
   working_directory: ~/repo
   docker:
     - image: 'circleci/node:latest'
+on-main: &on-main
+  filters:
+    branches:
+      only:
+        - main
 jobs:
   test:
     <<: *defaults
@@ -52,17 +57,16 @@ workflows:
     jobs:
       - test
       - deploy-staging:
-          filters:
-            branches:
-              only:
-                - main
+          <<: *on-main
           requires:
             - test
       - manual-test:
           type: approval
+          <<: *on-main
           requires:
             - test
             - deploy-staging
       - release:
+          <<: *on-main
           requires:
             - manual-test
