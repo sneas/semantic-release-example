@@ -58,11 +58,11 @@ workflows:
                 - main
           requires:
             - test
-      - hold:
+      - manual-test:
           type: approval
           requires:
             - test
             - deploy-staging
       - release:
           requires:
-            - hold
+            - manual-test
